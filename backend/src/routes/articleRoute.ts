@@ -4,12 +4,21 @@ import { Article } from '../interfaces/Article';
 
 let articles: Article[];
 try {
-  const data = fs.readFileSync('knowledgebase.json', 'utf8');
+  const data = fs.readFileSync(__dirname + '/../knowledgebase.json', 'utf8');
   const json = JSON.parse(data);
+  console.log(json);
   articles = json.articles || [];
 } catch (err) {
   if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
-    articles = [];
+    articles = [
+      {
+        id: 'A1',
+        title: 'Welcome to Knowledge Base',
+        content: 'This is the default knowledge base article.',
+        tags: ['welcome', 'default'],
+      },
+    ];
+    saveToFile();
   } else {
     throw err;
   }
@@ -78,19 +87,17 @@ router.delete('/:id', (req: Request, res: Response) => {
 router.get('/search', (req: Request, res: Response) => {
   const query = req.query.q;
   if (typeof query !== 'string' || !query.trim()) {
-    return res.status(400).json({ message: 'Query parameter "q" is required' });
+    res.status(400).json({ message: 'Query parameter "q" is required' });
+    return;
   }
   const queryLower = query.toLowerCase();
-  if (!query) {
-    return res.status(400).json({ message: 'Query parameter "q" is required' });
-  }
   const results = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(query) ||
       article.content.toLowerCase().includes(query) ||
       article.tags.some((tag) => tag.toLowerCase() === query)
   );
-  res.json(results);
+  res.status(200).json(results);
 });
 
 export default router;
