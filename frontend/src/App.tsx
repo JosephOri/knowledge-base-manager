@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import ArticleList from './components/ArticleList';
 import { SearchBar } from './components/SearchBar';
-import { useArticles, useSearchArticles } from './hooks/articleHooks';
+import { useArticles } from './hooks/articleHooks';
 
 const App = () => {
-  const [searchQuery, setSearchQuery] = useState('');
   const { data: articles = [], isLoading, error } = useArticles();
-  const { data: searchResults } = useSearchArticles(searchQuery);
+  const [displayedArticles, setdisplayedArticles] = useState(articles);
 
   const handleSearch = (query: string) => {
-    setSearchQuery(query);
+    const filteredArticles = articles.filter(
+      (article) =>
+        article.title.toLowerCase().includes(query.toLowerCase()) ||
+        article.content.toLowerCase().includes(query.toLowerCase()) ||
+        article.tags.some((tag) => tag.toLowerCase().includes(query.toLowerCase()))
+    );
+    setdisplayedArticles(filteredArticles);
   };
-
-  const displayedArticles = searchQuery ? searchResults || [] : articles;
 
   if (isLoading) return <div>Loading articles...</div>;
   if (error) return <div>Error loading articles: {error.message}</div>;

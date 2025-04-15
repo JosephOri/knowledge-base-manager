@@ -57,14 +57,3 @@ export const useDeleteArticle = () => {
     },
   });
 };
-
-export const useSearchArticles = (query: string) => {
-  return useQuery<Article[]>({
-    queryKey: ['search', query],
-    queryFn: async () => {
-      const { data } = await api.get('/search', { params: { q: query } });
-      return data;
-    },
-    enabled: !!query,
-  });
-};
