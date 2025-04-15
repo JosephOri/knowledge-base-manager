@@ -1,20 +1,19 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ArticleList from './components/ArticleList';
 import { SearchBar } from './components/SearchBar';
-import { useArticles, useCreateArticle } from './hooks/articleHooks';
+import { useArticles } from './hooks/articleHooks';
 import { Article } from './types/Article';
 import { Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { ArticleForm } from './components/ArticleForm';
+import ArticleForm from './components/ArticleForm';
+import { EditArticleForm } from './components/EditArticleForm';
 import Loading from './components/Loading';
 import ErrorDisplay from './components/ErrorDisplay';
 
 const App = () => {
   const { data: articles = [], isLoading, error } = useArticles();
-  const { mutateAsync: createArticle } = useCreateArticle();
   const [displayedArticles, setdisplayedArticles] = useState<Article[]>([]);
-  const [showForm, setShowForm] = useState(false);
 
   useEffect(() => {
     setdisplayedArticles(articles);
@@ -43,17 +42,14 @@ const App = () => {
               <>
                 <SearchBar onSearch={handleSearch} />
                 <ArticleList articles={displayedArticles} />
-                <Button
-                  variant="contained"
-                  onClick={() => setShowForm(!showForm)}
-                  sx={{ marginBottom: 2, width: '20%' }}
-                >
-                  {showForm ? 'Cancel' : 'Add New Article'}
+                <Button variant="contained" component={Link} to="/create" sx={{ marginBottom: 2, width: '20%' }}>
+                  Add New Article
                 </Button>
               </>
             }
           />
-          <Route path="/edit/:id" element={<ArticleForm />} />
+          <Route path="/edit/:id" element={<EditArticleForm />} />
+          <Route path="/create" element={<ArticleForm />} />
         </Routes>
       </Grid>
     </Router>

@@ -1,15 +1,25 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Stack } from '@mui/material';
-import { useCreateArticle } from '../hooks/articleHooks';
-import { useNavigate } from 'react-router-dom';
+import { useArticle, useUpdateArticle } from '../hooks/articleHooks';
 
-const ArticleForm = ({ onSuccess }: { onSuccess?: () => void }) => {
-  const createMutation = useCreateArticle();
+export const EditArticleForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data: existingArticle } = useArticle(id || '');
+  const updateMutation = useUpdateArticle();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [validationError, setValidationError] = useState('');
-  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (existingArticle) {
+      setTitle(existingArticle.title);
+      setContent(existingArticle.content);
+      setTags(existingArticle.tags.join(', '));
+    }
+  }, [existingArticle]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,17 +29,12 @@ const ArticleForm = ({ onSuccess }: { onSuccess?: () => void }) => {
     }
 
     try {
-      await createMutation.mutateAsync({
+      await updateMutation.mutateAsync({
+        id: id!,
         title,
         content,
         tags: tags.split(',').map((t) => t.trim()),
       });
-      setTitle('');
-      setContent('');
-      setTags('');
-      setValidationError('');
-      onSuccess?.();
-      alert('Article created successfully!');
       navigate('/');
     } catch (error) {
       console.error('Submission error:', error);
@@ -69,14 +74,12 @@ const ArticleForm = ({ onSuccess }: { onSuccess?: () => void }) => {
 
         {validationError && <Box color="error.main">{validationError}</Box>}
 
-        {createMutation.error && <Box color="error.main">Error: {createMutation.error.message}</Box>}
+        {updateMutation.error && <Box color="error.main">Error: {updateMutation.error.message}</Box>}
 
-        <Button type="submit" variant="contained" disabled={createMutation.isPending} sx={{ alignSelf: 'flex-start' }}>
-          {createMutation.isPending ? 'Creating...' : 'Create Article'}
+        <Button type="submit" variant="contained" disabled={updateMutation.isPending} sx={{ alignSelf: 'flex-start' }}>
+          {updateMutation.isPending ? 'Updating...' : 'Update Article'}
         </Button>
       </Stack>
     </Box>
   );
 };
-
-export default ArticleForm;
