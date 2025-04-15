@@ -35,6 +35,7 @@ export const EditArticleForm = () => {
         content,
         tags: tags.split(',').map((t) => t.trim()),
       });
+      alert('Article edited successfully!');
       navigate('/');
     } catch (error) {
       console.error('Submission error:', error);
