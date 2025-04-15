@@ -1,6 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { Article } from '../types/Article';
+import { queryClient } from '../main';
 
 const api = axios.create({
   baseURL: 'http://localhost:3001',
@@ -28,7 +29,6 @@ export const useArticle = (id: string) => {
 };
 
 export const useCreateArticle = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (newArticle: Omit<Article, 'id'>) => api.post('/articles', newArticle),
     onSuccess: () => {
@@ -38,7 +38,6 @@ export const useCreateArticle = () => {
 };
 
 export const useUpdateArticle = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (updatedArticle: Article) => api.put(`/articles/${updatedArticle.id}`, updatedArticle),
     onSuccess: (_, variables) => {
@@ -49,7 +48,6 @@ export const useUpdateArticle = () => {
 };
 
 export const useDeleteArticle = () => {
-  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (id: string) => api.delete(`/articles/${id}`),
     onSuccess: () => {
