@@ -9,7 +9,7 @@ interface Props {
 
 const ArticleList = ({ articles }: Props) => {
   return (
-    <Grid container spacing={2} padding={2}>
+    <Grid container spacing={2}>
       {articles.length > 0 ? (
         articles.map((article) => (
           <Grid size={{ xs: 12, sm: 6, md: 4 }} key={article.id}>
