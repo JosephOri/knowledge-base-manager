@@ -1,14 +1,14 @@
 import { Article } from '../types/Article';
 import { Card, CardContent, Typography, Box, Chip, IconButton } from '@mui/material';
 import { useDeleteArticle } from '../hooks/articleHooks';
+import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
 interface Props {
   article: Article;
-  onEdit: (article: Article) => void;
 }
-const ArticleCard = ({ article, onEdit }: Props) => {
+const ArticleCard = ({ article }: Props) => {
   const { mutate: deleteArticle } = useDeleteArticle();
   return (
     <Card sx={{ display: 'flex', flexDirection: 'column' }}>
@@ -26,7 +26,7 @@ const ArticleCard = ({ article, onEdit }: Props) => {
           ))}
         </Box>
         <Box display="flex" gap={1} mb={2}>
-          <IconButton size="small" onClick={() => onEdit(article)} aria-label="Edit">
+          <IconButton size="small" component={Link} to={`/edit/${article.id}`}>
             <EditIcon fontSize="small" />
           </IconButton>
           <IconButton

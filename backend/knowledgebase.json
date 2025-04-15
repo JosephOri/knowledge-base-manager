@@ -12,8 +12,8 @@
     },
     {
       "id": "A2",
-      "title": "Troubleshooting Login Issues",
-      "content": "If you experience issues logging in, try the following steps...",
+      "title": "Troubleshooting Login Issues 2",
+      "content": "If you experience issues logging in, try the following steps... 2",
       "tags": [
         "login",
         "troubleshooting"
@@ -44,12 +44,6 @@
       "tags": [
         "dashboard"
       ]
-    },
-    {
-      "id": "A6",
-      "title": "FAQ",
-      "content": "Common questions and answers about our support system.",
-      "tags": []
     }
   ]
 }

@@ -1,17 +1,26 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Stack } from '@mui/material';
+import { useArticle, useCreateArticle, useUpdateArticle } from '../hooks/articleHooks';
 
-type ArticleFormProps = {
-  onSubmit: (article: { title: string; content: string; tags: string[] }) => Promise<void>;
-  isPending: boolean;
-  error?: Error;
-};
-
-export const ArticleForm = ({ onSubmit, isPending, error }: ArticleFormProps) => {
+export const ArticleForm = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { data: existingArticle } = useArticle(id || '');
+  const createMutation = useCreateArticle();
+  const updateMutation = useUpdateArticle();
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
   const [validationError, setValidationError] = useState('');
+
+  useEffect(() => {
+    if (existingArticle) {
+      setTitle(existingArticle.title);
+      setContent(existingArticle.content);
+      setTags(existingArticle.tags.join(', '));
+    }
+  }, [existingArticle]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,15 +29,25 @@ export const ArticleForm = ({ onSubmit, isPending, error }: ArticleFormProps) =>
       return;
     }
 
-    await onSubmit({
-      title,
-      content,
-      tags: tags.split(',').map((t) => t.trim()),
-    });
-    setTitle('');
-    setContent('');
-    setTags('');
-    setValidationError('');
+    try {
+      if (id) {
+        await updateMutation.mutateAsync({
+          id,
+          title,
+          content,
+          tags: tags.split(',').map((t) => t.trim()),
+        });
+      } else {
+        await createMutation.mutateAsync({
+          title,
+          content,
+          tags: tags.split(',').map((t) => t.trim()),
+        });
+      }
+      navigate('/');
+    } catch (error) {
+      console.error('Submission error:', error);
+    }
   };
 
   return (
@@ -64,10 +83,23 @@ export const ArticleForm = ({ onSubmit, isPending, error }: ArticleFormProps) =>
 
         {validationError && <Box color="error.main">{validationError}</Box>}
 
-        {error && <Box color="error.main">Error creating article: {error.message}</Box>}
+        {(createMutation.error || updateMutation.error) && (
+          <Box color="error.main">Error: {(createMutation.error || updateMutation.error)?.message}</Box>
+        )}
 
-        <Button type="submit" variant="contained" disabled={isPending} sx={{ alignSelf: 'flex-start' }}>
-          {isPending ? 'Submitting...' : 'Create Article'}
+        <Button
+          type="submit"
+          variant="contained"
+          disabled={createMutation.isPending || updateMutation.isPending}
+          sx={{ alignSelf: 'flex-start' }}
+        >
+          {id
+            ? updateMutation.isPending
+              ? 'Updating...'
+              : 'Update Article'
+            : createMutation.isPending
+            ? 'Creating...'
+            : 'Create Article'}
         </Button>
       </Stack>
     </Box>
