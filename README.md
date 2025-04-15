@@ -15,7 +15,7 @@ npm install
 
 3. Install frontend dependencies:
 ```bash
-cd ../frontend
+cd frontend
 npm install
 ```
 
@@ -30,7 +30,7 @@ The backend will run on http://localhost:3001
 
 2. Start the frontend development server (from frontend directory):
 ```bash
-cd ../frontend
+cd frontend
 npm run dev
 ```
 The frontend will open in your browser at http://localhost:5173
