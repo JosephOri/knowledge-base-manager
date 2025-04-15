@@ -1,18 +1,5 @@
 # Knowledge Base Manager
 
-A full-stack application for managing technical knowledge base articles with a React frontend and Node.js backend.
-
-## Features
-- View all articles
-- Search articles by title, content or tags
-- Create new articles with title, content and tags
-- Responsive UI with Material-UI components
-- Persistent storage in JSON files
-
-## Prerequisites
-- Node.js 16+ and npm installed
-- Git for version control
-
 ## Installation
 
 1. Clone the repository:
