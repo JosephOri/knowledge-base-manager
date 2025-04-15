@@ -7,7 +7,7 @@
 git clone https://github.com/JosephOri/knowledge-base-manager.git
 ```
 
-3. Install backend dependencies:
+2. Install backend dependencies:
 ```bash
 cd backend
 npm install
