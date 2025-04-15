@@ -32,7 +32,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
       <TextField
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search articles..."
+        placeholder="Search articles by title, content, or tags..."
         variant="outlined"
         size="small"
         fullWidth
