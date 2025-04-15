@@ -1,7 +1,12 @@
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import fs from 'fs';
-import { Article } from './interfaces/Article';
+interface Article {
+  id: string;
+  title: string;
+  content: string;
+  tags: string[];
+}
 
 let articles: Article[];
 try {
