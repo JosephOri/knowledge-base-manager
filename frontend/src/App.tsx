@@ -1,49 +1,26 @@
+import { useState } from 'react';
 import ArticleList from './components/ArticleList';
-import { Article } from './types/Article';
-
-const articles: Article[] = [
-  {
-    id: 'A1',
-    title: 'How to Reset Your Password',
-    content: 'Follow these steps to reset your password...',
-    tags: ['account', 'password', 'security'],
-  },
-  {
-    id: 'A2',
-    title: 'Troubleshooting Login Issues',
-    content: 'If you experience issues logging in, try the following steps...',
-    tags: ['login', 'troubleshooting'],
-  },
-  {
-    id: 'A3',
-    title: 'Payment Processing Guide',
-    content: '',
-    tags: ['payment', 'checkout'],
-  },
-  {
-    id: 'A4',
-    title: '',
-    content: 'This article explains how to configure email notifications.',
-    tags: ['notifications', 'email'],
-  },
-  {
-    id: 'A5',
-    title: 'Using the Dashboard',
-    content: 'Learn how to navigate and utilize the dashboard effectively.',
-    tags: ['dashboard'],
-  },
-  {
-    id: 'A6',
-    title: 'FAQ',
-    content: 'Common questions and answers about our support system.',
-    tags: [],
-  },
-];
+import { SearchBar } from './components/SearchBar';
+import { useArticles, useSearchArticles } from './hooks/articleHooks';
 
 const App = () => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const { data: articles = [], isLoading, error } = useArticles();
+  const { data: searchResults } = useSearchArticles(searchQuery);
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+  };
+
+  const displayedArticles = searchQuery ? searchResults || [] : articles;
+
+  if (isLoading) return <div>Loading articles...</div>;
+  if (error) return <div>Error loading articles: {error.message}</div>;
+
   return (
     <div>
-      <ArticleList articles={articles} />
+      <SearchBar onSearch={handleSearch} />
+      <ArticleList articles={displayedArticles} />
     </div>
   );
 };
