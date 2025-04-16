@@ -1,5 +1,13 @@
 {
+  "private": true,
+  "workspaces": ["frontend", "backend"],
+  "scripts": {
+    "start": "concurrently \"yarn workspace backend start\" \"yarn workspace frontend start\""
+  },
   "dependencies": {
     "react-router-dom": "^7.5.0"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
   }
 }
