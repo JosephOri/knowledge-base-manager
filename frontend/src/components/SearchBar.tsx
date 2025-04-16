@@ -12,6 +12,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     onSearch(query);
+    setQuery('');
   };
 
   return (
