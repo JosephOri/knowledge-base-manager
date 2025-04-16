@@ -12,7 +12,6 @@ let articles: Article[];
 try {
   const data = fs.readFileSync('knowledgebase.json', 'utf8');
   const json = JSON.parse(data);
-  console.log(json);
   articles = json.articles || [];
 } catch (err) {
   if ((err as NodeJS.ErrnoException).code === 'ENOENT') {
